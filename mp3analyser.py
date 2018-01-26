@@ -198,8 +198,12 @@ def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_po
     draw_polar(high_output, col, al, of)
     pyplot.show()
 
+
+
 if __name__ == '__main__':
-    data = load_wav('C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav')
+    #/home/apache/Musique/No more Lord.wav
+    #C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav
+    data = load_wav('/home/apache/Musique/No more Lord.wav')
     chuck_down_factor = 60
     snd = data[1]
     # print(snd.dtype)
