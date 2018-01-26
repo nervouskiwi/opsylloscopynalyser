@@ -82,7 +82,7 @@ def band_filter(data, freq, cutoff=(1000,5000), order=7):
 
     return output
 
-def draw_polar(data, color, offset=60000):
+def draw_polar(data, color, alpha, offset=60000):
     phi = []
     rho = []
     print(max(abs(data)))
@@ -97,7 +97,7 @@ def draw_polar(data, color, offset=60000):
     # print(phi)
 
     ax = pyplot.subplot(111, projection='polar')
-    ax.plot(phi, rho, color=color, alpha=0.5)
+    ax.plot(phi, rho, color=color, alpha=alpha)
 
     #Corlorize filling between offset (0 point of radial representation) and amplitude value
     ax.fill_between(phi, numpy.ones(len(rho))*offset, rho, facecolor=color, interpolate=True)
@@ -111,6 +111,92 @@ def draw_polar(data, color, offset=60000):
 
     ax.set_title("NervousApache", va='bottom')
 
+def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_polar_args={'colors':{'l':None,'b':None,'m':None,'h':None},'alphas':{'l':None,'b':None,'m':None,'h':None},'offsets':{'l':None,'b':None,'m':None,'h':None}}):
+
+    if filt_args['bass'] != []:
+        if len(filt_args['bass']) == 2:
+            fargs = [sound,freq]
+            fargs.extend(filt_args['bass'])
+            bass_output = bass_filter(*fargs)
+    else:
+        bass_output = bass_filter(sound,freq)
+    if filt_args['band'] != []:
+        if len(filt_args['band']) == 2:
+            fargs = [sound,freq]
+            fargs.extend(filt_args['band'])
+            bass_output = bass_filter(*fargs)
+    else:
+        band_output = band_filter(sound,freq)
+    if filt_args['high'] != []:
+        if len(filt_args['high']) == 2:
+            fargs = [sound,freq]
+            fargs.extend(filt_args['high'])
+            bass_output = bass_filter(*fargs)
+    else:
+        high_output = high_filter(sound,freq)
+
+    pol = pyplot.figure()
+    u = numpy.ones(len(sound)//chuck_down_factor)
+    # u = numpy.ones(len(s1))
+
+    if draw_polar_args['colors']['l'] is not None:
+        col = draw_polar_args['colors']['l']
+    else:
+        col = 'w'
+    if draw_polar_args['alphas']['l'] is not None:
+        al = draw_polar_args['alphas']['l']
+    else:
+        al = 0.5
+    if draw_polar_args['offsets']['l'] is not None:
+        of = draw_polar_args['offsets']['l']
+    else:
+        of = 20
+    draw_polar(u, col, al, of)
+
+    if draw_polar_args['colors']['b'] is not None:
+        col = draw_polar_args['colors']['b']
+    else:
+        col = 'g'
+    if draw_polar_args['alphas']['b'] is not None:
+        al = draw_polar_args['alphas']['b']
+    else:
+        al = 0.5
+    if draw_polar_args['offsets']['b'] is not None:
+        of = draw_polar_args['offsets']['b']
+    else:
+        of = 60000
+    draw_polar(bass_output, col, al, of)
+
+
+    if draw_polar_args['colors']['m'] is not None:
+        col = draw_polar_args['colors']['m']
+    else:
+        col = 'b'
+    if draw_polar_args['alphas']['m'] is not None:
+        al = draw_polar_args['alphas']['m']
+    else:
+        al = 0.5
+    if draw_polar_args['offsets']['m'] is not None:
+        of = draw_polar_args['offsets']['m']
+    else:
+        of = 60000
+    draw_polar(band_output, col, al, of)
+
+
+    if draw_polar_args['colors']['h'] is not None:
+        col = draw_polar_args['colors']['h']
+    else:
+        col = 'b'
+    if draw_polar_args['alphas']['h'] is not None:
+        al = draw_polar_args['alphas']['h']
+    else:
+        al = 0.5
+    if draw_polar_args['offsets']['h'] is not None:
+        of = draw_polar_args['offsets']['h']
+    else:
+        of = 60000
+    draw_polar(high_output, col, al, of)
+    pyplot.show()
 
 if __name__ == '__main__':
     data = load_wav('C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav')
@@ -118,36 +204,16 @@ if __name__ == '__main__':
     snd = data[1]
     # print(snd.dtype)
     freq = data[0]
-    print(freq)
+    # print(freq)
     #snd = snd / (2.**15)
-    s1 = snd[:,0]
+    snd = snd[:,0]
     # s1 = [float(s1[i]) for i in list(range(len(s1)))]
-    s1 = [float(s1[i]) for i in list(range(len(s1)//chuck_down_factor))]
-    duration = snd.shape[0]/data[0]
-    print(snd.shape[0])
-    print(len(s1))
-    # print(snd.shape)
-    # print(snd.shape[0]/data[0])
-    #draw_snd(s1, freq)
-    # for i in list(range(12000,12500)):
-    #     print(s1[i])
+    sound = [float(snd[i]) for i in list(range(len(snd)))]
+    sound = sound[:len(sound)//chuck_down_factor]
+    # duration = snd.shape[0]/data[0]
+    # print(snd.shape[0])
+    # print(len(sound))
 
+    triband_iris(sound, freq)
 
-    # fig = pyplot.figure()
-    bass_output = bass_filter(s1,freq)
-    band_output = band_filter(s1,freq)
-    high_output = high_filter(s1,freq)
-
-    # t = arange(0,len(data),1)
-    # pyplot.plot(t, bass_output, color='g', alpha=0.5)
-    # pyplot.show()
-
-    pol = pyplot.figure()
-    u = numpy.ones(len(s1)//chuck_down_factor)
-    # u = numpy.ones(len(s1))
-    draw_polar(u, 'w',offset=20)
-    draw_polar(bass_output, 'g')
-    draw_polar(band_output, 'b')
-    draw_polar(high_output, 'r')
-    pyplot.show()
     #pol.savefig('IrisdB_20.eps', format='eps', dpi=1)
