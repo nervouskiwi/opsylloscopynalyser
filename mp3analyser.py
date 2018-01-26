@@ -98,6 +98,9 @@ def draw_polar(data, color, offset=60000):
 
     ax = pyplot.subplot(111, projection='polar')
     ax.plot(phi, rho, color=color, alpha=0.5)
+
+    #Corlorize filling between offset (0 point of radial representation) and amplitude value
+    ax.fill_between(phi, numpy.ones(len(rho))*offset, rho, facecolor=color, interpolate=True)
     #ax.set_rmax(5*(max(data) + offset))
     ax.set_rticks([])  # less radial ticks
     #ax.get_raxis.set_visible(False)
@@ -106,18 +109,20 @@ def draw_polar(data, color, offset=60000):
     #ax.set_rlabel_position(-22.5)  # get radial labels away from plotted line
     ax.grid(False)
 
-    ax.set_title("A line plot on a polar axis", va='bottom')
+    ax.set_title("NervousApache", va='bottom')
 
 
 if __name__ == '__main__':
-    data = load_wav('C:/Users/NervousKiwi/MusicStuff/Exports/Apache Crew/Ricks Advice.wav')
+    data = load_wav('C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav')
+    chuck_down_factor = 60
     snd = data[1]
     # print(snd.dtype)
     freq = data[0]
     print(freq)
     #snd = snd / (2.**15)
     s1 = snd[:,0]
-    s1 = [float(s1[i]) for i in list(range(len(s1)))]
+    # s1 = [float(s1[i]) for i in list(range(len(s1)))]
+    s1 = [float(s1[i]) for i in list(range(len(s1)//chuck_down_factor))]
     duration = snd.shape[0]/data[0]
     print(snd.shape[0])
     print(len(s1))
@@ -138,7 +143,8 @@ if __name__ == '__main__':
     # pyplot.show()
 
     pol = pyplot.figure()
-    u = numpy.ones(len(s1))
+    u = numpy.ones(len(s1)//chuck_down_factor)
+    # u = numpy.ones(len(s1))
     draw_polar(u, 'w',offset=20)
     draw_polar(bass_output, 'g')
     draw_polar(band_output, 'b')
