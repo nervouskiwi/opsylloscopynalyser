@@ -149,27 +149,6 @@ def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args=
         fi = draw_polar_args['fill'][band]
         draw_polar(band_output, col, al, of, fi)
 
-    # if filt_args['b'] != []:
-    #     if len(filt_args['b']) == 2:
-    #         fargs = [sound,freq]
-    #         fargs.extend(filt_args['b'])
-    #         bass_output = bass_filter(*fargs)
-    # else:
-    #     bass_output = bass_filter(sound,freq)
-    # if filt_args['m'] != []:
-    #     if len(filt_args['m']) == 2:
-    #         fargs = [sound,freq]
-    #         fargs.extend(filt_args['m'])
-    #         bass_output = bass_filter(*fargs)
-    # else:
-    #     band_output = band_filter(sound,freq)
-    # if filt_args['h'] != []:
-    #     if len(filt_args['h']) == 2:
-    #         fargs = [sound,freq]
-    #         fargs.extend(filt_args['h'])
-    #         bass_output = bass_filter(*fargs)
-    # else:
-    #     high_output = high_filter(sound,freq)
 
 
     u = numpy.ones(len(sound)//chuck_down_factor)
@@ -188,54 +167,6 @@ def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args=
     else:
         of = 20
     draw_polar(u, col, al, of)
-
-    # if draw_polar_args['colors']['b'] is not None:
-    #     col = draw_polar_args['colors']['b']
-    # else:
-    #     col = 'g'
-    # if draw_polar_args['alphas']['b'] is not None:
-    #     al = draw_polar_args['alphas']['b']
-    # else:
-    #     al = 0.5
-    # if draw_polar_args['offsets']['b'] is not None:
-    #     of = draw_polar_args['offsets']['b']
-    # else:
-    #     of = 60000
-    # fi = draw_polar_args['fill']['b']
-    # draw_polar(bass_output, col, al, of, fi)
-    #
-    #
-    # if draw_polar_args['colors']['m'] is not None:
-    #     col = draw_polar_args['colors']['m']
-    # else:
-    #     col = 'b'
-    # if draw_polar_args['alphas']['m'] is not None:
-    #     al = draw_polar_args['alphas']['m']
-    # else:
-    #     al = 0.5
-    # if draw_polar_args['offsets']['m'] is not None:
-    #     of = draw_polar_args['offsets']['m']
-    # else:
-    #     of = 60000
-    # fi = draw_polar_args['fill']['m']
-    #
-    # draw_polar(band_output, col, al, of, fi)
-    #
-    #
-    # if draw_polar_args['colors']['h'] is not None:
-    #     col = draw_polar_args['colors']['h']
-    # else:
-    #     col = 'r'
-    # if draw_polar_args['alphas']['h'] is not None:
-    #     al = draw_polar_args['alphas']['h']
-    # else:
-    #     al = 0.5
-    # if draw_polar_args['offsets']['h'] is not None:
-    #     of = draw_polar_args['offsets']['h']
-    # else:
-    #     of = 60000
-    # fi = draw_polar_args['fill']['h']
-    # draw_polar(high_output, col, al, of, fi)
 
 
     pyplot.show()
