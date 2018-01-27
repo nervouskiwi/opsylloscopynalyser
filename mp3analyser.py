@@ -240,12 +240,23 @@ def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args=
 
     pyplot.show()
 
-def spectrum(sound, freq):
+def spectrum(sound, freq, offset=0, half = True):
     pyplot.figure()
-    k = numpy.arange(len(sound))
-    T = len(sound)/freq
+    n = len(sound)
+    k = numpy.arange(n)
+    T = n/freq
     frq = k/T
-    Y = numpy.fft.fft(sound)/len(sound)
+    if half == True:
+        frq = frq[range(n//2)]
+        frq = frq[offset:]
+    else:
+        frq = frq[offset:-offset]
+    Y = numpy.fft.fft(sound)/n
+    if half == True:
+        Y = Y[range(n//2)]
+        Y = Y[offset:]
+    else:
+        Y = Y[offset:-offset]
     plot(frq,abs(Y),'r')
     pyplot.show()
 
@@ -277,6 +288,6 @@ if __name__ == '__main__':
     # print(len(sound))
 
     triband_iris(sound, freq)
-    spectrum(sound, freq)
+    spectrum(sound, freq, offset = 50)
 
     #pol.savefig('IrisdB_20.eps', format='eps', dpi=1)
