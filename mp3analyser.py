@@ -249,11 +249,25 @@ def spectrum(sound, freq):
     plot(frq,abs(Y),'r')
     pyplot.show()
 
-def crush_sound_data(sound, framerate, freq=44100):
-    nb_chunk = freq//framerate
+def crush_sound_data(sound, framerate=30, freq=44100, data_percentage=100, first_data_mode=True):
+    if data_percentage >100:
+        data_percentage=100
+
+    elif data_percentage < 0:
+        data_percentage = 0
+
+    chunk_size = freq//framerate
+    print(chunk_size)
     chunks=[]
-    for i in list(range(nb_chunk)):
-        chunks.append(sound[i*framerate:(i+1)*framerate])
+    for i in list(range(len(sound)//chunk_size)):
+
+        if first_data_mode:
+            chunk_data = sound[i*chunk_size:(i+1)*chunk_size*data_percentage//100]
+        else:
+            chunk_data = sound[i*chunk_size:chunk_size*data_percentage//100:(i+1)*chunk_size]
+
+
+        chunks.append(chunk_data)
 
     return chunks
 
@@ -261,7 +275,7 @@ def crush_sound_data(sound, framerate, freq=44100):
 if __name__ == '__main__':
     #/home/apache/Musique/No more Lord.wav
     #C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav
-    data = load_wav('C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav')
+    data = load_wav('/home/apache/Musique/No more Lord.wav')
     chuck_down_factor = 60
     snd = data[1]
     # print(snd.dtype)
@@ -275,7 +289,7 @@ if __name__ == '__main__':
     # duration = snd.shape[0]/data[0]
     # print(snd.shape[0])
     # print(len(sound))
-
+    chunks = crush_sound_data(sound,framerate=60, data_percentage=50,first_data_mode=False)
     triband_iris(sound, freq)
     spectrum(sound, freq)
 
