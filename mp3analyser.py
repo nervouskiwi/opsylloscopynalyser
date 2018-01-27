@@ -189,7 +189,7 @@ def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_po
     if draw_polar_args['colors']['h'] is not None:
         col = draw_polar_args['colors']['h']
     else:
-        col = 'b'
+        col = 'r'
     if draw_polar_args['alphas']['h'] is not None:
         al = draw_polar_args['alphas']['h']
     else:
@@ -202,13 +202,20 @@ def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_po
     draw_polar(high_output, col, al, of, fi)
     pyplot.show()
 
+def crush_sound_data(sound, framerate, freq=44100):
+    nb_chunk = freq//framerate
+    chunks=[]
+    for i in list(range(nb_chunk)):
+        chunks.append(sound[i*framerate:(i+1)*framerate])
+
+    return chunks
 
 
 if __name__ == '__main__':
     #/home/apache/Musique/No more Lord.wav
     #C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav
     data = load_wav('/home/apache/Musique/No more Lord.wav')
-    chuck_down_factor = 60
+    chuck_down_factor = 40
     snd = data[1]
     # print(snd.dtype)
     freq = data[0]
@@ -221,7 +228,7 @@ if __name__ == '__main__':
     # duration = snd.shape[0]/data[0]
     # print(snd.shape[0])
     # print(len(sound))
-
+    chunks = crush_sound_data(sound, 60)
     triband_iris(sound, freq)
 
     #pol.savefig('IrisdB_20.eps', format='eps', dpi=1)
