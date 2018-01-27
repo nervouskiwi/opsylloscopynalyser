@@ -246,9 +246,17 @@ def spectrum(sound, freq):
     T = len(sound)/freq
     frq = k/T
     Y = numpy.fft.fft(sound)/len(sound)
-
     plot(frq,abs(Y),'r')
     pyplot.show()
+
+def crush_sound_data(sound, framerate, freq=44100):
+    nb_chunk = freq//framerate
+    chunks=[]
+    for i in list(range(nb_chunk)):
+        chunks.append(sound[i*framerate:(i+1)*framerate])
+
+    return chunks
+
 
 if __name__ == '__main__':
     #/home/apache/Musique/No more Lord.wav
@@ -272,4 +280,3 @@ if __name__ == '__main__':
     spectrum(sound, freq)
 
     #pol.savefig('IrisdB_20.eps', format='eps', dpi=1)
-
