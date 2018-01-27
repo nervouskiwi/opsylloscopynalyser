@@ -149,27 +149,6 @@ def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args=
         fi = draw_polar_args['fill'][band]
         draw_polar(band_output, col, al, of, fi)
 
-    # if filt_args['b'] != []:
-    #     if len(filt_args['b']) == 2:
-    #         fargs = [sound,freq]
-    #         fargs.extend(filt_args['b'])
-    #         bass_output = bass_filter(*fargs)
-    # else:
-    #     bass_output = bass_filter(sound,freq)
-    # if filt_args['m'] != []:
-    #     if len(filt_args['m']) == 2:
-    #         fargs = [sound,freq]
-    #         fargs.extend(filt_args['m'])
-    #         bass_output = bass_filter(*fargs)
-    # else:
-    #     band_output = band_filter(sound,freq)
-    # if filt_args['h'] != []:
-    #     if len(filt_args['h']) == 2:
-    #         fargs = [sound,freq]
-    #         fargs.extend(filt_args['h'])
-    #         bass_output = bass_filter(*fargs)
-    # else:
-    #     high_output = high_filter(sound,freq)
 
 
     u = numpy.ones(len(sound)//chuck_down_factor)
@@ -189,64 +168,31 @@ def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args=
         of = 20
     draw_polar(u, col, al, of)
 
-    # if draw_polar_args['colors']['b'] is not None:
-    #     col = draw_polar_args['colors']['b']
-    # else:
-    #     col = 'g'
-    # if draw_polar_args['alphas']['b'] is not None:
-    #     al = draw_polar_args['alphas']['b']
-    # else:
-    #     al = 0.5
-    # if draw_polar_args['offsets']['b'] is not None:
-    #     of = draw_polar_args['offsets']['b']
-    # else:
-    #     of = 60000
-    # fi = draw_polar_args['fill']['b']
-    # draw_polar(bass_output, col, al, of, fi)
-    #
-    #
-    # if draw_polar_args['colors']['m'] is not None:
-    #     col = draw_polar_args['colors']['m']
-    # else:
-    #     col = 'b'
-    # if draw_polar_args['alphas']['m'] is not None:
-    #     al = draw_polar_args['alphas']['m']
-    # else:
-    #     al = 0.5
-    # if draw_polar_args['offsets']['m'] is not None:
-    #     of = draw_polar_args['offsets']['m']
-    # else:
-    #     of = 60000
-    # fi = draw_polar_args['fill']['m']
-    #
-    # draw_polar(band_output, col, al, of, fi)
-    #
-    #
-    # if draw_polar_args['colors']['h'] is not None:
-    #     col = draw_polar_args['colors']['h']
-    # else:
-    #     col = 'r'
-    # if draw_polar_args['alphas']['h'] is not None:
-    #     al = draw_polar_args['alphas']['h']
-    # else:
-    #     al = 0.5
-    # if draw_polar_args['offsets']['h'] is not None:
-    #     of = draw_polar_args['offsets']['h']
-    # else:
-    #     of = 60000
-    # fi = draw_polar_args['fill']['h']
-    # draw_polar(high_output, col, al, of, fi)
-
 
     pyplot.show()
 
-def spectrum(sound, freq):
+def spectrum(sound, freq, offset=0, color = 'y',half=True, fill=True):
     pyplot.figure()
-    k = numpy.arange(len(sound))
-    T = len(sound)/freq
+    n = len(sound)
+    k = numpy.arange(n)
+    T = n/freq
     frq = k/T
-    Y = numpy.fft.fft(sound)/len(sound)
-    plot(frq,abs(Y),'r')
+    if half == True:
+        frq = frq[range(n//2)]
+        frq = frq[offset:]
+    else:
+        frq = frq[offset:-offset]
+    Y = numpy.fft.fft(sound)/n
+    if half == True:
+        Y = Y[range(n//2)]
+        Y = Y[offset:]
+    else:
+        Y = Y[offset:-offset]
+    ax = pyplot.subplot(111)
+    ax.plot(frq,abs(Y),color)
+
+    if fill == True:
+        ax.fill_between(frq, numpy.ones(len(abs(Y))), abs(Y), facecolor=color, interpolate=True)
     pyplot.show()
 
 def crush_sound_data(sound, framerate=30, freq=44100, data_percentage=100, first_data_mode=True):
@@ -291,6 +237,6 @@ if __name__ == '__main__':
     # print(len(sound))
     chunks = crush_sound_data(sound,framerate=60, data_percentage=50,first_data_mode=False)
     triband_iris(sound, freq)
-    spectrum(sound, freq)
+    spectrum(sound, freq, offset = 50)
 
     #pol.savefig('IrisdB_20.eps', format='eps', dpi=1)
