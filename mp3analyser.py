@@ -82,7 +82,7 @@ def band_filter(data, freq, cutoff=(1000,5000), order=7):
 
     return output
 
-def draw_polar(data, color, alpha, offset=60000):
+def draw_polar(data, color, alpha, offset=60000, fill=True):
     phi = []
     rho = []
     print(max(abs(data)))
@@ -100,7 +100,8 @@ def draw_polar(data, color, alpha, offset=60000):
     ax.plot(phi, rho, color=color, alpha=alpha)
 
     #Corlorize filling between offset (0 point of radial representation) and amplitude value
-    ax.fill_between(phi, numpy.ones(len(rho))*offset, rho, facecolor=color, interpolate=True)
+    if fill == True:
+        ax.fill_between(phi, numpy.ones(len(rho))*offset, rho, facecolor=color, interpolate=True)
     #ax.set_rmax(5*(max(data) + offset))
     ax.set_rticks([])  # less radial ticks
     #ax.get_raxis.set_visible(False)
@@ -111,7 +112,7 @@ def draw_polar(data, color, alpha, offset=60000):
 
     ax.set_title("NervousApache", va='bottom')
 
-def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_polar_args={'colors':{'l':None,'b':None,'m':None,'h':None},'alphas':{'l':None,'b':None,'m':None,'h':None},'offsets':{'l':None,'b':None,'m':None,'h':None}}):
+def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_polar_args={'colors':{'l':None,'b':None,'m':None,'h':None},'alphas':{'l':None,'b':None,'m':None,'h':None},'offsets':{'l':None,'b':None,'m':None,'h':None}, 'fill':{'b':True,'m':True,'h':True}}):
 
     if filt_args['bass'] != []:
         if len(filt_args['bass']) == 2:
@@ -165,7 +166,8 @@ def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_po
         of = draw_polar_args['offsets']['b']
     else:
         of = 60000
-    draw_polar(bass_output, col, al, of)
+    fi = draw_polar_args['fill']['b']
+    draw_polar(bass_output, col, al, of, fi)
 
 
     if draw_polar_args['colors']['m'] is not None:
@@ -180,7 +182,8 @@ def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_po
         of = draw_polar_args['offsets']['m']
     else:
         of = 60000
-    draw_polar(band_output, col, al, of)
+    fi = draw_polar_args['fill']['m']
+    draw_polar(band_output, col, al, of, fi)
 
 
     if draw_polar_args['colors']['h'] is not None:
@@ -195,7 +198,8 @@ def triband_iris(sound, freq, filt_args={'bass':[],'band':[],'high':[]}, draw_po
         of = draw_polar_args['offsets']['h']
     else:
         of = 60000
-    draw_polar(high_output, col, al, of)
+    fi = draw_polar_args['fill']['h']
+    draw_polar(high_output, col, al, of, fi)
     pyplot.show()
 
 
