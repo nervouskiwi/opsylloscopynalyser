@@ -240,7 +240,7 @@ def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args=
 
     pyplot.show()
 
-def spectrum(sound, freq, offset=0, half = True):
+def spectrum(sound, freq, offset=0, color = 'y',half=True, fill=True):
     pyplot.figure()
     n = len(sound)
     k = numpy.arange(n)
@@ -257,7 +257,11 @@ def spectrum(sound, freq, offset=0, half = True):
         Y = Y[offset:]
     else:
         Y = Y[offset:-offset]
-    plot(frq,abs(Y),'r')
+    ax = pyplot.subplot(111)
+    ax.plot(frq,abs(Y),color)
+
+    if fill == True:
+        ax.fill_between(frq, numpy.ones(len(abs(Y))), abs(Y), facecolor=color, interpolate=True)
     pyplot.show()
 
 def crush_sound_data(sound, framerate, freq=44100):
