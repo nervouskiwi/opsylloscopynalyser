@@ -114,7 +114,7 @@ def draw_polar(data, color, alpha, offset=60000, fill=True):
 
 def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args={'colors':{'l':None,'b':None,'m':None,'h':None},'alphas':{'l':None,'b':None,'m':None,'h':None},'offsets':{'l':None,'b':None,'m':None,'h':None}, 'fill':{'b':True,'m':True,'h':True}}):
 
-    pol = pyplot.figure()
+    pyplot.figure()
 
 
     for band in ['b', 'm', 'h']:
@@ -240,7 +240,15 @@ def triband_iris(sound, freq, filt_args={'b':[],'m':[],'h':[]}, draw_polar_args=
 
     pyplot.show()
 
+def spectrum(sound, freq):
+    pyplot.figure()
+    k = numpy.arange(len(sound))
+    T = len(sound)/freq
+    frq = k/T
+    Y = numpy.fft.fft(sound)/len(sound)
 
+    plot(frq,abs(Y),'r')
+    pyplot.show()
 
 if __name__ == '__main__':
     #/home/apache/Musique/No more Lord.wav
@@ -261,5 +269,7 @@ if __name__ == '__main__':
     # print(len(sound))
 
     triband_iris(sound, freq)
+    spectrum(sound, freq)
 
     #pol.savefig('IrisdB_20.eps', format='eps', dpi=1)
+
