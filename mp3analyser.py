@@ -273,9 +273,9 @@ def crush_sound_data(sound, framerate=30, freq=44100, data_percentage=100, first
 
 
 if __name__ == '__main__':
-    #/home/apache/Musique/No more Lord.wav
-    #C:/Users/NervousKiwi/MusicStuff/Battrey/Battrey 4/Battery 4 Factory Library/Samples/One Shots/SFX/SFX Autopsy 2 V2.wav
-    data = load_wav('/home/apache/Musique/No more Lord.wav')
+    
+    finput = str(sys.argv[1])
+    data = load_wav(finput)
     chuck_down_factor = 60
     snd = data[1]
     # print(snd.dtype)
